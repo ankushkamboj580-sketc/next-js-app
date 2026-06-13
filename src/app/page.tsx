@@ -1,66 +1,93 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import Image from 'next/image';
+import styles from './page.module.css';
+import { useState } from 'react';
+import { getPresidents } from './data/actions';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function Page(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const router = useRouter();
+  
+  const createAccount = async () => {
+    // alert(firstName + ',' + lastName + ',' + email + ',' + password + ',' + confirmPassword);
+    const presidents = await getPresidents();
+    console.log('createAccount====>', presidents);
+    router.push('/dashboard');
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className={styles.rootContainer}>
+      <div className={styles.leftContainer}>
+        <Image className={styles.sampleImage} src="/app_main_image.png" alt="Profile" fill={true} />
+      </div>
+      <div className={styles.rightContainer}>
+        <button className={styles.signup}>Sign Up</button>
+        <div
+          className={styles.createAccount}>
+          Create An Account
+        </div>
+        <div className={styles.userNameContainer}>
+          <input
+            className={styles.name}
+            placeholder='First Name'
+            type='text'
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e?.target.value);
+            }}
+          />
+          <input
+            className={`${styles.name} ${styles.lastName}`}
+            placeholder='Last Name'
+            type='text'
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value)
+            }}
+          />
+        </div>
+        <input
+        required={true}
+          className={`${styles.email}`}
+          placeholder='Enter Your Email'
+          type='email'
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value)
+          }}
         />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <input 
+          className={`${styles.email}`} 
+          placeholder='Password' 
+          type='password' 
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
+        />
+        <input 
+          className={`${styles.email}`} 
+          placeholder='Confirm Password' 
+          type='password' 
+          value={confirmPassword}
+          onChange={(e) => {
+            setConfirmPassword(e.target.value)
+          }}
+        />
+        <button 
+          className={styles.createAccountButton}
+          onClick={createAccount}
+        >
+          Create an Account
+        </button>
+      </div>
     </div>
-  );
+  )
 }
